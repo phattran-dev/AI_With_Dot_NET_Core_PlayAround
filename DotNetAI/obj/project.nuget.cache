@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "xa0k0A/1UbslRKBrQHe/VdhZn3la56wJAN2dJgtF0Zq9LlGd/+cg8gRXPEGJWal2VjISFr/hcxtj1P3MeEHC6A==",
+  "success": true,
+  "projectFilePath": "C:\\backup\\Workspace\\Research_AI\\Dot_NET_AI_Playaround\\DotNetAI\\DotNetAI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\phat.tran.STS\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\phat.tran.STS\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
+    "C:\\Users\\phat.tran.STS\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
+    "C:\\Users\\phat.tran.STS\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
+    "C:\\Users\\phat.tran.STS\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
+    "C:\\Users\\phat.tran.STS\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512"
+  ],
+  "logs": []
+}
