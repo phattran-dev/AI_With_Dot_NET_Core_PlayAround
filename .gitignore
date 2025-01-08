@@ -26,6 +26,9 @@ nupkg/
 *.userosscache
 *.sln.docstates
 
+# Ignore all appsettings files
+appsettings*.json
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
