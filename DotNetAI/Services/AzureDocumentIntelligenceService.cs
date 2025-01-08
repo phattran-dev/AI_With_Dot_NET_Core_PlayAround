@@ -1,6 +1,9 @@
 ﻿using Azure;
 using Azure.AI.DocumentIntelligence;
 using DotNetAI.Model;
+using DotnetGeminiSDK.Client.Interfaces;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace DotNetAI.Services
 {
@@ -12,8 +15,8 @@ namespace DotNetAI.Services
     {
         private readonly DocumentIntelligenceClient _documentIntelligenceClient;
         private readonly string modelId;
-
-        public AzureDocumentIntelligenceService(IConfiguration configuration)
+        private readonly IGeminiClient _geminiClient;
+        public AzureDocumentIntelligenceService(IConfiguration configuration, IGeminiClient geminiClient)
         {
             var endpoint = configuration.GetValue<string>("AzureDocumentIntelligence:endpoint");
             var apiKey = configuration.GetValue<string>("AzureDocumentIntelligence:apiKey");
@@ -21,6 +24,8 @@ namespace DotNetAI.Services
 
             var credential = new AzureKeyCredential(apiKey);
             this._documentIntelligenceClient = new DocumentIntelligenceClient(new Uri(endpoint), credential);
+
+            _geminiClient = geminiClient;
         }
 
         public async Task<CV> AnalyzeCVAsync(IFormFile file)
@@ -37,7 +42,7 @@ namespace DotNetAI.Services
                 throw new Exception("Document not found");
             }
 
-            var cv = ExtractData(document);
+            var cv = await ExtractData(document);
 
             return cv;
         }
@@ -50,7 +55,7 @@ namespace DotNetAI.Services
             return memoryStream;
         }
 
-        private CV ExtractData(AnalyzedDocument document)
+        private async Task<CV> ExtractData(AnalyzedDocument document)
         {
             var cv = new CV();
 
@@ -65,7 +70,7 @@ namespace DotNetAI.Services
                         break;
 
                     case "title":
-                        cv.Title = fieldValue;
+                        cv.Role = fieldValue;
                         break;
 
                     case "overview":
@@ -95,7 +100,7 @@ namespace DotNetAI.Services
                         }
                     }
                 }
-                cv.TechnicalSkills = skills;
+                cv.TechnicalSkills = await CorrectDataSkills(skills);
             }
 
             // Process Certifications
@@ -149,11 +154,13 @@ namespace DotNetAI.Services
             // Process WorkExperiences 
             if (document.Fields.TryGetValue("WorkExperiences", out var workExperienceFields) && workExperienceFields.FieldType == DocumentFieldType.List)
             {
-                var workExperience = new WorkExperience();
+
+                var workExperiences = new List<WorkExperience>();
                 foreach (DocumentField item in workExperienceFields.ValueList)
                 {
                     if (item.FieldType == DocumentFieldType.Dictionary)
                     {
+                        var workExperience = new WorkExperience();
                         foreach (KeyValuePair<string, DocumentField> subItem in item.ValueDictionary)
                         {
                             var fieldValue = subItem.Value?.ValueString ?? string.Empty;
@@ -184,11 +191,42 @@ namespace DotNetAI.Services
                                     break;
                             }
                         }
+                        workExperiences.Add(workExperience);
                     }
                 }
-                cv.WorkExperiences.Add(workExperience);
+                cv.WorkExperiences = workExperiences;
             }
             return cv;
+        }
+
+        private string CorrectPromptResponse(string rawText)
+        {
+            string pattern = @"\[""(.*?)"",\s*""(.*?)""\]";
+            Match match = Regex.Match(rawText, pattern);
+            var correctionResponse = match.Success ? match.Value : "";
+
+            return correctionResponse;
+        }
+
+        private async Task<List<string>> CorrectDataSkills(List<string> skills)
+        {
+            if (!skills.Any())
+                return skills;
+
+            var rootPrompt = "You will receive a JSON array containing strings, where each string represents one or more technical skills. These strings may contain multiple concatenated skills (e.g., 'C#Java', 'PythonJavaScript'), variations in capitalization (e.g., 'java', 'Java'), and punctuation (e.g., 'Java.', 'C++'). Your task is: Separate combined skills within each string into individual skills. Ensure the final list contains only unique skills And Return JSON Array: Provide the output as a JSON array containing the cleaned and standardized skill names. \r\n\r Here is the input: ";
+            var processPrompt = rootPrompt + JsonSerializer.Serialize(skills);
+
+            var response = await _geminiClient.TextPrompt(processPrompt);
+
+            if (response.Candidates.Any())
+            {
+                var rawTextSkillsCorrection = response.Candidates[0].Content.Parts[0].Text;
+                var rawSkillsCorrection = JsonSerializer.Deserialize<List<string>>(CorrectPromptResponse(rawTextSkillsCorrection));
+                var skillsCorrection = rawSkillsCorrection.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                return skillsCorrection;
+            }
+
+            return skills;
         }
 
     }

@@ -1,4 +1,5 @@
 using DotNetAI.Services;
+using DotnetGeminiSDK;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,12 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
+
+builder.Services.AddGeminiClient(config =>
+{
+    config.ApiKey = builder.Configuration.GetValue<string>("Gemini:ApiKey");
+    config.ModelBaseUrl = builder.Configuration.GetValue<string>("Gemini:Url");
+});
 // Add services to the container.
 builder.Services.AddScoped<IAzureDocumentIntelligenceService, AzureDocumentIntelligenceService>();
 

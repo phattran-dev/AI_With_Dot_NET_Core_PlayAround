@@ -3,7 +3,7 @@
     public class CV
     {
         public string? Name { get; set; }
-        public string? Title { get; set; }
+        public string? Role { get; set; }
         public string? Overview { get; set; }
         public List<string>? TechnicalSkills { get; set; }
         public List<WorkExperience>? WorkExperiences { get; set; }

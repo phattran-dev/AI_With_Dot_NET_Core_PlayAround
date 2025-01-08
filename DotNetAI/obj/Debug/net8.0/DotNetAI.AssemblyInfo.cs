@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DotNetAI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b7fbcaf553c31839169c6ae234550513c1078b78")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0ea677f2a5ffb0115529feed7743e8a2495ee27")]
 [assembly: System.Reflection.AssemblyProductAttribute("DotNetAI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DotNetAI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

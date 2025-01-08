@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
+            "DotnetGeminiSDK": {
+              "target": "Package",
+              "version": "[1.0.14, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
