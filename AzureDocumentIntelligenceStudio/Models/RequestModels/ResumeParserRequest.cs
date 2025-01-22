@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DotNetAI.Requests
+namespace AzureDocumentIntelligenceStudio.Models.RequestModels
 {
-    public class CVParserRequest
+    public class ResumeParserRequest
     {
         [Required]
         public IFormFile File { get; set; }

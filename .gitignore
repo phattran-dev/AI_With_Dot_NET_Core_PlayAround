@@ -27,8 +27,6 @@ nupkg/
 *.sln.docstates
 
 # Ignore all appsettings files
-*appsettings.json
-appsettings.json
 *.appsettings.json
 appsettings.*.json
 

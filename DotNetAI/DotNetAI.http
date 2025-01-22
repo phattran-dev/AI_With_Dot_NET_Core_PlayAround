@@ -1,6 +1,0 @@
-@DotNetAI_HostAddress = http://localhost:5132
-
-GET {{DotNetAI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
